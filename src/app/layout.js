@@ -1,5 +1,12 @@
-import { Inter } from 'next/font/google'
-import './globals.css'
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Nav from '@/components/Nav';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import  GlobalState  from '@/context/index';
+
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,7 +18,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <GlobalState>
+          <Nav />
+          <ToastContainer />
+          <main className='flex min-h-screen flex-col mt-5'>{children}</main>
+        </GlobalState>
+        
+        </body>
     </html>
   )
 }
