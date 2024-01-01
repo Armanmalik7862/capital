@@ -1,19 +1,20 @@
 "use client";
 import { index } from "@/navigation/index";
 import Logo from "./Logo";
-import { UserRound, LogOut } from "lucide-react";
+import { UserRound, LogOut, X  } from "lucide-react";
 import Link from "next/link";
-import { usePathname,useRouter } from "next/navigation";
-import { useState } from "react";
-import login from '@/components/Login';
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useContext } from "react";
+import { GlobalContext } from "@/context/index";
+import Cookies from "js-cookie";
 
 function Nav() {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoginMenuOpen, setLoginMenu] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Assuming you have a way to determine user login status
-
-
+  const { isAuthUser, setIsAuthUser, userInfo, setUserInfo } =
+    useContext(GlobalContext);
+    //console.log(userInfo);
 
   const NavItem = ({ item }) => (
     <Link href={item.href} key={item._id}>
@@ -32,17 +33,17 @@ function Nav() {
   };
 
   const handleLogout = () => {
-  // Add your logout logic here
-   setIsAuthUser(false);
-   setUserInfo(null);
-   Cookies.remove('token');
-   localStorage.clear();
-   router.push('/signup')
-
-
-    setIsLoggedIn(false);
-    
+    // Add your logout logic here
+    setIsAuthUser(false);
+    setUserInfo(null);
+    Cookies.remove("token");
+    localStorage.clear();
+    router.replace("/register");
   };
+  
+  const handleCloseMenu = () => {
+    setLoginMenu(false);
+  }
 
   return (
     <div className="w-full h-20 border-b-[1px] border-b-zinc-500 bg-white text-zinc-600 sticky top-0 z-50">
@@ -53,29 +54,46 @@ function Nav() {
             <NavItem key={items._id} item={items} />
           ))}
         </ul>
-        
+
         <div className="flex items-center">
-          <button className="hover:bg-black cursor-pointer duration-200">
-            {isLoggedIn ? (
-              // Render LogOut button if user is logged in
-              <LogOut 
-                onClick={handleLogout}  // Replace with your logout logic
-                className="w-8 h-8 fixed top-4 right-10  active:bg-slate-300 active:rounded-md"
-              />
-            ) : (
-              // Render UserRound if user is not logged in
+          {isAuthUser ? (
+            <div className="flex items-center overflow-hidden">
+            {userInfo && userInfo.email ? (
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-24">
+                <span className="text-white">
+                  {userInfo.email.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            ) : null}
+              <div className="flex items-center">
+                <button className="hover:bg-black cursor-pointer duration-200">
+                  <LogOut
+                    onClick={handleLogout}
+                    className="w-8 h-8 fixed top-4 right-10  active:bg-slate-300 active:rounded-md"
+                  />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button className="hover:bg-black cursor-pointer duration-200">
               <UserRound
                 onClick={handleLoginMenu}
                 className="w-8 h-8 fixed top-4 right-10  active:bg-slate-300 active:rounded-md"
               />
-            )}
-          </button>
-        </div>      
+            </button>
+          )}
+        </div>
       </div>
-     
-      {/* always keep the card in main div only */}
-      {isLoginMenuOpen && (
+
+       {/* always keep the card in main div only */}
+       {isLoginMenuOpen && (
         <div className="mt-1 w-[7rem] h-[7rem] float-end mr-1 rounded-md border-[1px] shadow-lg z-50 ">
+          <button
+            className="absolute top-[5.5rem] right-2 text-gray-500 hover:text-black cursor-pointer rounded-md border-[1px] shadow-lg z-50"
+            onClick={handleCloseMenu}
+          >
+            <X />
+          </button>
           <div className="pt-[2rem] flex items-center flex-col gap-2 ">
             <Link href="/register">SignUp</Link>
             <Link href="/login">LogIn</Link>

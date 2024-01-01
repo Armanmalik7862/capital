@@ -46,7 +46,7 @@ function LoginForm() {
     event.preventDefault();
     
     const res = await logIn(state);
-    //console.log(res);
+    console.log(res);
    
     if (res.success) {
       toast.success(res.message, {
@@ -55,8 +55,11 @@ function LoginForm() {
       setIsAuthUser(true);   //for track user is authenticated or not
       setUserInfo(res?.finalData?.user); //receice this data
       setstate(initialFormdata); //for clear data from form
-      Cookies.set("token", res?.finalData?.token,  { sameSite: "None", secure: true });
-      localStorage.setItem("user", JSON.stringify(res?.finalData?.user));
+       Cookies.set("token", res?.finalResult?.token, { sameSite: "None", secure: true });
+       localStorage.setItem("user", JSON.stringify(res?.finalResult?.user));
+      // Console log Cookies and Local Storage data
+      // console.log("Cookies:", Cookies.get("token"));
+      // console.log("LocalStorage:", localStorage.getItem("user"));
     
       // setComponentLevelLoader({ loading: false, id: "" });
     } else {
@@ -67,7 +70,7 @@ function LoginForm() {
       // setComponentLevelLoader({ loading: false, id: "" });
     }
   };
-  console.log(isAuthUser,userInfo);
+ // console.log(isAuthUser,userInfo);
 
  
   //if user is authenticated then redirect to home 
@@ -126,14 +129,27 @@ function LoginForm() {
           </div>
          
           </form>
-          <div className="mt-7 flex items-center justify-center flex-col ">
-            <p>dont have a account?</p>
+          <div className="flex items-center justify-center flex-col">
+          <div className="mt-7 flex items-center flex-col ">
+            <label>Don't have a account?</label>
             <Link
             href="/register"
-            className="px-3 p-1 text-white bg-black/70 w-[6em] h-[2em] border-[1px] border-black rounded-md active:bg-black"
+            className="mt-2 px-3 p-1 text-white bg-black/70 w-[6em] h-[2em] border-[1px] border-black rounded-md active:bg-black"
           >SingnUp
           </Link>
+          
           </div>
+          <div className="mt-3 flex flex-col">
+            <label>Forget Password</label>
+            <Link
+            href="/forget"
+            className="mt-2 px-3 p-1 text-white bg-black/70 w-[10em] h-[2em] border-[1px] border-black rounded-md active:bg-black"
+          >forget_password
+          </Link>
+          
+          </div>
+          </div>
+          
           
           
         </div>

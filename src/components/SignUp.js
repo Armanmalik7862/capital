@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { registerNewUser } from '@/services/register/index';
+import { GlobalContext } from "@/context/index";
 
 function SignupForm() {
   const router = useRouter();
@@ -12,6 +13,10 @@ function SignupForm() {
     password: "",
     phone: "",
   });
+
+  const { isAuthUser } =
+  useContext(GlobalContext);
+
 
 
   const inputEvent = (event) => {
@@ -52,6 +57,12 @@ function SignupForm() {
       toast.error('Registration failed', { position: 'top-center' });
     }
   };
+  
+  //if user is  Authenticated or loggedin then can't redirect to signup page
+  useEffect(() => {
+    if (isAuthUser) router.push("/");
+  }, [isAuthUser]);
+
 
 
   return (

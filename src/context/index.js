@@ -5,17 +5,18 @@ import Cookies  from 'js-cookie';
 
 
 
+
 export const GlobalContext = createContext(null);
 
 export default function GlobalState({children}){
+    
     const [isAuthUser, setIsAuthUser] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
 
-
+    //used for when page is refreshed then also user is loggined
     useEffect(() => {
         // Check for the presence of token in cookies
         const token = Cookies.get('token');
-        console.log(localStorage.getItem('user'));
         const storedUserData = localStorage.getItem('user');
     
         if (token && storedUserData) {
@@ -32,8 +33,9 @@ export default function GlobalState({children}){
           setIsAuthUser(false);
           setUserInfo(null);
         }
-      }, []);
+      }, [Cookies.get('token')]);
 
+   
     
            
     return(
