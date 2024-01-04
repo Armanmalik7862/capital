@@ -2,8 +2,9 @@
 import { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { registerNewUser } from '@/services/register/index';
+//import { registerNewUser } from '@/services/register/index';
 import { GlobalContext } from "@/context/index";
+import axios from 'axios';
 
 function SignupForm() {
   const router = useRouter();
@@ -35,7 +36,8 @@ function SignupForm() {
     event.preventDefault();
    
     try {
-      const response = await registerNewUser(state);
+      const res = await axios.post("/api/users/register", state);
+      const response = res.data;
       
       if (response.success) {
         toast.success(response.message, { position: 'top-center' });

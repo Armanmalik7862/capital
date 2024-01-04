@@ -47,7 +47,7 @@ export async function POST(req) {
       });
     }
 
-    // user is authenticated
+    // create token
     const token = jwt.sign(
       {
         id: checkUser._id,
@@ -65,6 +65,7 @@ export async function POST(req) {
         username: checkUser.username,
       },
     };
+    //console.log(token);
 
     return NextResponse.json({
       success: true,
@@ -79,3 +80,16 @@ export async function POST(req) {
     });
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

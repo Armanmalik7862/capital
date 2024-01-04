@@ -19,10 +19,14 @@ const UserSchema = new Schema({
         required: [true, "Phone Number is Required!"]
 
     },
-    // isVerfied:{
-    //     type: Boolean,
-    //     default: false,
-    // }
+    isVerfied:{
+        type: Boolean,
+        default: false,
+    },
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpiry: Date,
+    verifyToken: String,
+    verifyTokenExpiry: Date,
 });
 
 const User = mongoose.models.users || mongoose.model('users',UserSchema);

@@ -4,20 +4,12 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import  Link  from 'next/link';
 
-
-
-
-
-
-
 function LoginForm() {
   const router = useRouter();
   const [state, setstate] = useState({
     email:""
   });
   
-
-
   const inputEvent = (event) => {
     const { name, value } = event.target;
 
@@ -28,9 +20,6 @@ function LoginForm() {
       };
     });
   };
-
-  
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     toast.success("Submitted Successfully");
@@ -42,9 +31,6 @@ function LoginForm() {
     
     
   };
- 
-
-
   return (
     <>
     <div className=" flex items-center justify-center mt-5 overflow-hidden">
