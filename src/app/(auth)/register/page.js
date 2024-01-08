@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 //import { registerNewUser } from '@/services/register/index';
-import { GlobalContext } from "@/context/index";
+//import { GlobalContext } from "@/context/index";
 import axios from 'axios';
 
 function SignupForm() {
@@ -15,8 +15,8 @@ function SignupForm() {
     phone: "",
   });
 
-  const { isAuthUser } =
-  useContext(GlobalContext);
+  // const { isAuthUser } =
+  // useContext(GlobalContext);
 
 
 
@@ -35,38 +35,33 @@ function SignupForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
    
-    // try {
-    //   const res = await axios.post("/api/users/register", state);
-    //   const response = res.data;
+   
+    try {
+      const res = await axios.post("/api/auth/register", state);
+      const response = res.data;
       
-    //   if (response.success) {
-    //     toast.success(response.message, { position: 'top-center' });
+      if (response.success) {
+        toast.success(response.message, { position: 'top-center' });
 
-    //     // Reset form fields to empty after successful submission
-    //     setstate({
-    //       username: '',
-    //       email: '',
-    //       password: '',
-    //       phone: '',
-    //     });
-    //     // Redirect to login page after successful submission
-    //     router.push('/login');
-    //   } else {
-    //     toast.error(response.message, { position: 'top-center' });
-    //   }
-    // } catch (error) {
-    //   console.error('Error during registration:', error);
-    //   toast.error('Registration failed', { position: 'top-center' });
-    // }
+        // Reset form fields to empty after successful submission
+        setstate({
+          username: '',
+          email: '',
+          password: '',
+          phone: '',
+        });
+        // Redirect to login page after successful submission
+        router.push('/login');
+      } else {
+        toast.error(response.message, { position: 'top-center' });
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      toast.error('Registration failed', { position: 'top-center' });
+    }
   };
+ 
   
-  // //if user is  Authenticated or loggedin then can't redirect to signup page
-  // useEffect(() => {
-  //   if (isAuthUser) router.push("/");
-  // }, [isAuthUser]);
-
-
-
   return (
     <>
       <div className=" flex items-center justify-center mt-5 overflow-hidden">

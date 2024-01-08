@@ -3,9 +3,10 @@ import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 //import { logIn } from '@/services/login/index';
-import Cookies from "js-cookie";
-import { GlobalContext } from "@/context/index";
+// import Cookies from "js-cookie";
+// import { GlobalContext } from "@/context/index";
 import axios from "axios";
 
 const initialFormdata = {
@@ -16,8 +17,8 @@ const initialFormdata = {
 function LoginForm() {
   const router = useRouter();
   const [state, setstate] = useState(initialFormdata);
-  const { isAuthUser, setIsAuthUser, userInfo, setUserInfo } =
-    useContext(GlobalContext);
+  // const { isAuthUser, setIsAuthUser, userInfo, setUserInfo } =
+  //   useContext(GlobalContext);
 
   const inputEvent = (event) => {
     const { name, value } = event.target;
@@ -42,40 +43,41 @@ function LoginForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // try {
-    //   // Make the API call directly using Axios
-    //   const response = await axios.post("/api/users/login", state);
-    //   const res = response.data;
+    try {
+      // Make the API call directly using Axios
+      const response = await axios.post("/api/auth/login", state);
+      const res = response.data;
 
-    //   // const res = await logIn(state);
-    //   //console.log(res);
+      // const res = await logIn(state);
+      //console.log(res);
 
-    //   if (res.success) {
-    //     toast.success(res.message, {
-    //       position: toast.POSITION.TOP_CENTER,
-    //     });
-    //     setIsAuthUser(true); //for track user is authenticated or not
-    //     setUserInfo(res?.finalData?.user);   // Set user information received from the response
-    //     setstate(initialFormdata); //for clear data from form
-    //     Cookies.set("token", res?.finalResult?.token);
-    //     localStorage.setItem("user", JSON.stringify(res?.finalResult?.user));
-    //   } else {
-    //     toast.error(res.message, {
-    //       position: toast.POSITION.TOP_CENTER,
-    //     });
-    //     setIsAuthUser(false);
-    //     // setComponentLevelLoader({ loading: false, id: "" });
-    //   }
-    // } catch (error) {
-    //   console.error("Error during login:", error);
-    // }
+      if (res.success) {
+        toast.success(res.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        await signIn("credentials",{
+          email: state.email,
+          password: state.password,
+          callbackUrl:"/",
+          redirect: true,
+          onSuccess: async () => {
+            // Delay the redirection to give time for the user to see the toast message
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            router.push("/");
+          },
+        })
+        } else {
+        toast.error(res.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
-  // console.log(isAuthUser,userInfo);
 
-  // //if user is authenticated then redirect to home
-  // useEffect(() => {
-  //   if (isAuthUser) router.push("/");
-  // }, [isAuthUser]);
+
+ 
 
   return (
     <>

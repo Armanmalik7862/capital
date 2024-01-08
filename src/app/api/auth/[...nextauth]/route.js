@@ -1,8 +1,17 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { connectDb } from '@/helper/db';
+import User from '@/models/user';
+
 
 
 export const authOptions = {
+  pages: {
+    signIn: '/login'
+  },
+  // session: {
+  //   strategy: 'jwt'
+  // },
   // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
@@ -14,12 +23,11 @@ export const authOptions = {
         email: {label: "Email", type: "email", placeholder: "Enter Your Email"},
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // Add logic here to look up the user from the credentials supplied
-        const user = { 
-            id: "1", 
-            name: "J Smith", 
-            email: credentials.email }
+        connectDb();
+        const user = await User.findOne({email: credentials?.email})
+      
   
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
